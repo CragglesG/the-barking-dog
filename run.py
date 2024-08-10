@@ -20,6 +20,7 @@ def main(pir):
         if GPIO.input(pir):
             print("Movement detected!")
             break
+
 try:
     while True:
         main(PIR_PIN)
@@ -32,6 +33,8 @@ try:
             if res == 'y':
                 print('RABBIT DETECTED!!! BARK DOG, BARK!!!')
                 playsound("./dog-barking-70772.mp3")
+            else:
+                print('No rabbits')
 
 except KeyboardInterrupt:
     GPIO.cleanup()
