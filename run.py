@@ -1,29 +1,26 @@
-import RPi.GPIO as GPIO
+from gpiozero import MotionSensor
 from picamera2 import Picamera2 as picam
 import subprocess
 from time import sleep
 from playsound import playsound
 
 
-# Set up GPIO pins
-GPIO.setmode(GPIO.BCM)    
-PIR_PIN = 10
-GPIO.setup(PIR_PIN, GPIO.IN)
+pir = MotionSensor(15)
 
 cam = picam()
 
 config = cam.create_still_configuration()
 
-def main(pir):
+def main(pir: MotionSensor):
     # Main loop
     while True:
-        if GPIO.input(pir):
-            print("Movement detected!")
-            break
+        pir.wait_for_active()
+        print("Movement detected!")
+        break
 
 try:
     while True:
-        main(PIR_PIN)
+        main(pir)
         cam.start()
         sleep(1)
         cam.switch_mode_and_capture_file(config, "image.jpg")
@@ -36,5 +33,6 @@ try:
             else:
                 print('No rabbits')
 
+
 except KeyboardInterrupt:
-    GPIO.cleanup()
+    cam.close()
