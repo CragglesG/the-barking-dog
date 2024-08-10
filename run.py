@@ -6,8 +6,8 @@ from playsound import playsound
 
 
 # Set up GPIO pins
-GPIO.setmode(GPIO.BOARD)    
-PIR_PIN = 2
+GPIO.setmode(GPIO.BCM)    
+PIR_PIN = 10
 GPIO.setup(PIR_PIN, GPIO.IN)
 
 cam = picam()
