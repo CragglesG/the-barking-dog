@@ -1,29 +1,18 @@
-import time
-
 import torch
-import numpy as np
 from torchvision import models, transforms
-
 import cv2
-from PIL import Image
 from labels import classes
-
-torch.backends.quantized.engine = 'qnnpack'
 
 preprocess = transforms.Compose([
     transforms.ToTensor(),
     transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
 ])
 
-net = models.quantization.mobilenet_v2(pretrained=True, quantize=True)
+net = models.quantization.mobilenet_v2(weights=models.MobileNet_V2_Weights.DEFAULT)
 # jit model to take it from ~20fps to ~30fps
 net = torch.jit.script(net)
 
-started = time.time()
-last_logged = time.time()
-frame_count = 0
-
-image = cv2.imread("./image.jpg", cv2.IMREAD_COLOUR)
+image = cv2.imread("./image.jpg", cv2.IMREAD_COLOR)
 
 with torch.no_grad():
     # # convert opencv output from BGR to RGB
